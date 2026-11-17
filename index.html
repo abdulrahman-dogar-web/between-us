@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Between Us — Questions for Two Hearts</title>
+<meta name="description" content="A private Q&A room for two people. Pick a mood, share a code, answer honestly, reveal together.">
+<style>
+:root{
+  --bg:#fff7f0; --card:#ffffff; --ink:#3d2c2e; --muted:#9a7a7d;
+  --rose:#fb7185; --rose-deep:#e11d48; --peach:#fdba74; --blush:#ffe4e6;
+  --lav:#f3e8ff; --gold:#f59e0b; --green:#10b981; --line:#f3d9d7;
+  --shadow:0 10px 30px rgba(225,29,72,.10);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--ink); min-height:100vh;
+  background-image:radial-gradient(circle at 15% 10%, #ffe4e6 0%, transparent 45%),
+                   radial-gradient(circle at 90% 90%, #ffedd5 0%, transparent 45%);
+}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif; margin:0}
+button{font-family:inherit; cursor:pointer}
+input,textarea,select{font-family:inherit}
+.wrap{max-width:560px; margin:0 auto; padding:16px 14px 40px}
+.card{background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:18px; margin-top:14px}
+.hidden{display:none !important}
+.muted{color:var(--muted); font-size:13px}
+.center{text-align:center}
+.heart{font-size:44px; line-height:1}
+h1.title{font-size:32px; color:var(--rose-deep); margin-top:8px}
+.tagline{color:var(--muted); margin:6px 0 0; font-size:15px}
+label{display:block; font-size:13px; font-weight:600; color:var(--muted); margin:14px 0 6px}
+input[type=text],textarea{
+  width:100%; border:1.5px solid var(--line); border-radius:12px; padding:12px 14px;
+  font-size:16px; background:#fff; color:var(--ink); outline:none;
+}
+input[type=text]:focus,textarea:focus{border-color:var(--rose)}
+textarea{resize:vertical; min-height:76px}
+.btn{
+  display:block; width:100%; border:0; border-radius:14px; padding:14px;
+  font-size:16px; font-weight:700; margin-top:12px;
+}
+.btn-primary{background:linear-gradient(135deg,#fb7185,#e11d48); color:#fff}
+.btn-soft{background:var(--blush); color:var(--rose-deep)}
+.btn-ghost{background:#fff; border:1.5px solid var(--line); color:var(--ink)}
+.btn:disabled{opacity:.45; cursor:default}
+.btn-small{width:auto; display:inline-block; padding:9px 16px; font-size:14px; margin-top:0}
+.chip-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.chip{
+  border:1.5px solid var(--line); background:#fff; border-radius:999px;
+  padding:8px 12px; font-size:20px; line-height:1;
+}
+.chip.sel{border-color:var(--rose-deep); background:var(--blush)}
+.swatch{width:34px; height:34px; border-radius:50%; border:3px solid transparent; padding:0}
+.swatch.sel{border-color:var(--ink)}
+.mode-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px}
+.mode{
+  border:1.5px solid var(--line); background:#fff; border-radius:16px; padding:14px 10px;
+  text-align:center;
+}
+.mode.sel{border-color:var(--rose-deep); background:var(--blush)}
+.mode .em{font-size:26px; display:block}
+.mode .nm{font-weight:700; font-size:15px; display:block; margin-top:4px}
+.mode .ds{font-size:12px; color:var(--muted); display:block; margin-top:2px}
+.or{text-align:center; color:var(--muted); margin:18px 0 4px; font-size:13px; font-weight:700; letter-spacing:1px}
+.join-row{display:flex; gap:8px}
+.join-row input{text-transform:uppercase; letter-spacing:3px; font-weight:700; text-align:center}
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap}
+.code-pill{
+  background:var(--blush); color:var(--rose-deep); border-radius:999px; padding:7px 12px;
+  font-weight:800; letter-spacing:3px; font-size:15px; border:0;
+}
+.pill{
+  display:inline-block; border-radius:999px; padding:5px 11px; font-size:12px; font-weight:700;
+  background:var(--lav); color:#7e22ce;
+}
+.pill.rose{background:var(--blush); color:var(--rose-deep)}
+.profiles{display:flex; gap:10px; margin-top:12px}
+.profile{
+  flex:1; border:1.5px solid var(--line); border-radius:16px; padding:12px 10px;
+  text-align:center; position:relative; background:#fff;
+}
+.profile .av{font-size:34px; line-height:1}
+.profile .nm{font-weight:700; margin-top:6px; font-size:15px; word-break:break-word}
+.profile .st{font-size:12px; margin-top:4px; color:var(--muted)}
+.dot{display:inline-block; width:9px; height:9px; border-radius:50%; background:#cbd5e1; margin-right:4px; vertical-align:middle}
+.dot.on{background:var(--green)}
+.q-card{
+  background:linear-gradient(135deg,#fff1f2,#ffedd5); border:1px solid var(--line);
+  border-radius:20px; padding:22px 18px; text-align:center; margin-top:14px;
+}
+.q-mode{font-size:12px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--rose-deep)}
+.q-text{font-family:Georgia,serif; font-size:21px; line-height:1.45; margin:12px 0 4px}
+.q-from{font-size:12px; color:var(--muted); margin-top:8px}
+.answer-box{margin-top:12px}
+.answer-mine{
+  background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:12px 14px;
+  margin-top:12px; font-size:15px; text-align:left; white-space:pre-wrap; word-break:break-word;
+}
+.reveal{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px}
+.reveal .who{
+  border:1.5px solid var(--line); border-radius:14px; padding:12px; text-align:left;
+  background:#fff;
+}
+.reveal .who .who-nm{font-weight:700; font-size:13px; margin-bottom:6px}
+.reveal .who .who-tx{font-size:15px; white-space:pre-wrap; word-break:break-word}
+.next-note{font-size:12px; color:var(--muted); text-align:center; margin-top:10px}
+.chat{margin-top:14px}
+.chat-log{
+  max-height:260px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;
+  padding:4px 2px;
+}
+.msg{max-width:85%; padding:9px 12px; border-radius:14px; font-size:15px; line-height:1.4; word-break:break-word}
+.msg.me{align-self:flex-end; background:var(--rose); color:#fff; border-bottom-right-radius:4px}
+.msg.them{align-self:flex-start; background:#fff; border:1px solid var(--line); border-bottom-left-radius:4px}
+.msg .who{font-size:11px; font-weight:700; opacity:.75; display:block; margin-bottom:2px}
+.msg.sys{align-self:center; background:none; color:var(--muted); font-size:12px; padding:2px}
+.chat-row{display:flex; gap:8px; margin-top:10px}
+.chat-row input{flex:1}
+.chat-row button{width:auto; margin-top:0; padding:12px 18px}
+.toggle{display:flex; gap:6px; align-items:center}
+.toggle button{
+  border:1.5px solid var(--line); background:#fff; border-radius:999px; padding:7px 12px;
+  font-size:13px; font-weight:700;
+}
+.toggle button.sel{background:var(--rose-deep); color:#fff; border-color:var(--rose-deep)}
+.linklike{background:none; border:0; color:var(--rose-deep); font-weight:700; font-size:13px; padding:4px}
+.footer{text-align:center; color:var(--muted); font-size:12px; margin-top:26px}
+.toast{
+  position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+  background:#3d2c2e; color:#fff; padding:10px 18px; border-radius:999px; font-size:14px;
+  opacity:0; pointer-events:none; transition:opacity .25s; z-index:50; max-width:92vw; text-align:center;
+}
+.toast.show{opacity:1}
+@media (min-width:700px){
+  .wrap{max-width:640px}
+  .q-text{font-size:23px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ LANDING ============ -->
+  <div id="landing">
+    <div class="center" style="margin-top:18px">
+      <div class="heart">💕</div>
+      <h1 class="title">Between Us</h1>
+      <p class="tagline">Questions for two hearts. Pick a mood, share a code,<br>answer honestly — reveal together.</p>
+    </div>
+
+    <div class="card">
+      <label for="nameInput">Your name</label>
+      <input type="text" id="nameInput" maxlength="24" placeholder="e.g. Abdul" autocomplete="off">
+      <label>Pick your avatar</label>
+      <div class="chip-row" id="avatarRow"></div>
+      <label>Pick your colour</label>
+      <div class="chip-row" id="colorRow"></div>
+
+      <label>Choose a mood for the room</label>
+      <div class="mode-grid" id="modeGrid"></div>
+
+      <button class="btn btn-primary" id="createBtn">💌 Create room</button>
+      <div class="or">— OR —</div>
+      <label for="codeInput">Join with a room code</label>
+      <div class="join-row">
+        <input type="text" id="codeInput" maxlength="6" placeholder="ABCDEF" autocomplete="off">
+        <button class="btn btn-soft btn-small" id="joinBtn" style="padding:12px 20px">Join</button>
+      </div>
+      <button class="btn btn-ghost hidden" id="rejoinBtn">↩ Rejoin last room</button>
+      <p class="muted center" style="margin-top:14px">No signup. No login. Rooms are private — only people with the code can join. Rooms expire after ~24h of quiet.</p>
+    </div>
+    <p class="footer">Made with 💗 for two people who want to know each other better.<br>© 2026 Mr. Abdul Rahman Dogar</p>
+  </div>
+
+  <!-- ============ ROOM ============ -->
+  <div id="room" class="hidden">
+    <div class="topbar">
+      <button class="code-pill" id="codePill" title="Tap to copy">💌 ------</button>
+      <div class="toggle">
+        <button id="langEn" class="sel">EN</button>
+        <button id="langUr">UR</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="topbar">
+        <span class="pill rose" id="modePill">💗 Lovely</span>
+        <span>
+          <select id="modeSwitch" style="border:1.5px solid var(--line); border-radius:999px; padding:7px 10px; font-size:13px; font-weight:700; background:#fff"></select>
+        </span>
+      </div>
+      <div class="profiles" id="profiles"></div>
+      <p class="muted center" id="waitNote" style="margin:10px 0 0"></p>
+    </div>
+
+    <div class="q-card" id="qCard">
+      <div class="q-mode" id="qModeLabel">💗 Lovely</div>
+      <div class="q-text" id="qText">Tap “Next question” to begin…</div>
+      <div class="q-from" id="qFrom"></div>
+      <div id="answerArea" class="answer-box hidden">
+        <textarea id="answerInput" maxlength="280" placeholder="Type your honest answer… (280 chars)"></textarea>
+        <button class="btn btn-primary" id="submitAnswerBtn">✉️ Submit my answer</button>
+      </div>
+      <div id="myAnswerDone" class="hidden">
+        <div class="answer-mine" id="myAnswerText"></div>
+        <p class="muted center" style="margin:8px 0 0">Waiting for your partner… 🤫</p>
+      </div>
+      <div id="revealArea" class="hidden">
+        <div class="reveal" id="revealGrid"></div>
+        <p class="next-note">Talk about it in the chat below, then go to the next one 💬</p>
+      </div>
+      <button class="btn btn-primary" id="nextBtn" style="margin-top:16px">➡️ Next question</button>
+      <div id="upNext" class="next-note hidden"></div>
+    </div>
+
+    <div class="card">
+      <button class="btn btn-ghost" id="addQBtn">✨ Add a question</button>
+      <div id="addQArea" class="hidden" style="margin-top:10px">
+        <textarea id="customQInput" maxlength="200" placeholder="Type a question you want to ask… it will be rephrased so it feels like the game asked it 😉"></textarea>
+        <button class="btn btn-soft" id="sendCustomQBtn">Add it as the next question</button>
+        <p class="muted" style="margin:8px 0 0">It will be reworded automatically (e.g. “what if…”, “rate 1–10…”, “finish the sentence…”) so it never looks like you wrote it.</p>
+      </div>
+    </div>
+
+    <div class="card chat">
+      <h3 style="font-size:18px">💬 Free chat</h3>
+      <div class="chat-log" id="chatLog"></div>
+      <div class="chat-row">
+        <input type="text" id="chatInput" maxlength="300" placeholder="Say something…" autocomplete="off">
+        <button class="btn btn-primary" id="chatSendBtn">Send</button>
+      </div>
+    </div>
+
+    <div class="center" style="margin-top:14px">
+      <button class="linklike" id="leaveBtn">Leave room</button>
+      <span class="muted">·</span>
+      <button class="linklike" id="deleteBtn">Delete room (host)</button>
+    </div>
+    <p class="footer">Between Us · private room · © 2026 Mr. Abdul Rahman Dogar</p>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+
+/* ================= Question banks (20 per mode, EN + Roman Urdu) ================= */
+var MODES = [
+  { id:"lovely",       em:"💗", en:"Lovely",      ur:"Lovely",      ds:"Sweet & romantic", color:"#fb7185" },
+  { id:"deep",         em:"🌙", en:"Deep",        ur:"Deep",        ds:"Real & honest",    color:"#818cf8" },
+  { id:"fun",          em:"😄", en:"Fun",         ur:"Fun",         ds:"Silly & playful",  color:"#f59e0b" },
+  { id:"manifesting",  em:"✨", en:"Manifesting", ur:"Manifesting", ds:"Dreams & future",  color:"#10b981" },
+  { id:"delulu",       em:"🦄", en:"Delulu",      ur:"Delulu",      ds:"Wild what-ifs",    color:"#c084fc" }
+];
+var BANK = {
+lovely: [
+ {en:"What was the first thing you noticed about me?", ur:"Mujhe dekh kar sab se pehle kya notice kiya tha?"},
+ {en:"What is your favourite memory of us together?", ur:"Hamari sab se pyari yaad kaun si hai?"},
+ {en:"What little thing do I do that always makes you smile?", ur:"Meri kaun si chhoti si baat tumhe hamesha muskura deti hai?"},
+ {en:"When do you feel most loved by me?", ur:"Tumhe kab sab se zyada lagta hai ke main tumse pyaar karta hoon?"},
+ {en:"What is one thing you love about my laugh?", ur:"Meri hansi ki kaun si baat tumhe sab se achhi lagti hai?"},
+ {en:"If you could relive one day with me, which day would it be?", ur:"Agar ek din dobara jee sakte to kaun sa din chunte?"},
+ {en:"What is the sweetest thing I have ever said to you?", ur:"Maine tumse sab se pyari baat kya kahi thi?"},
+ {en:"What do you miss most when we are apart?", ur:"Jab hum door hote hain to tumhe meri sab se zyada kis cheez ki kami mehsoos hoti hai?"},
+ {en:"What is your favourite way I show I care?", ur:"Main jab apna khayal dikhata hoon to tumhe kaun sa tareeqa sab se achha lagta hai?"},
+ {en:"Which song reminds you of me, and why?", ur:"Kaun sa gaana tumhe meri yaad dilata hai, aur kyun?"},
+ {en:"What is one small dream you have just for the two of us?", ur:"Hamare liye tumhara ek chhota sa khwaab kya hai?"},
+ {en:"When did you first realise you liked me?", ur:"Tumhe pehli dafa kab ehsaas hua ke tum mujhe pasand karte ho?"},
+ {en:"What is the cutest thing about us as a couple?", ur:"Hum dono ki sab se cute baat kya hai?"},
+ {en:"If I were a colour, which colour would I be and why?", ur:"Agar main ek rang hota to kaun sa rang hota, aur kyun?"},
+ {en:"What is one thing you want us to do together this year?", ur:"Is saal hum dono ko ek saath kya karna chahiye?"},
+ {en:"What is your favourite thing about my voice?", ur:"Meri awaaz ki kaun si baat tumhe sab se achhi lagti hai?"},
+ {en:"What makes you feel safe with me?", ur:"Mere saath tumhe mehfooz mehsoos kyun hota hai?"},
+ {en:"What is the best compliment I ever gave you?", ur:"Maine tumhe sab se achhi tareef kya di thi?"},
+ {en:"If we had a secret handshake, what would it be?", ur:"Agar hamara koi secret handshake hota to kaisa hota?"},
+ {en:"What do you love most about the way we talk to each other?", ur:"Hum jis tarah ek doosre se baat karte hain, us mein tumhe sab se zyada kya pasand hai?"}
+],
+deep: [
+ {en:"What is one fear you have never told anyone?", ur:"Tumhara ek aisa darr jo tumne kabhi kisi ko nahi bataya?"},
+ {en:"What does love mean to you, really?", ur:"Sach mein, pyaar tumhare liye kya hai?"},
+ {en:"What is one thing from your childhood that still shapes you?", ur:"Bachpan ki kaun si baat aaj bhi tum par asar karti hai?"},
+ {en:"When do you feel most like yourself?", ur:"Tumhe kab sab se zyada lagta hai ke tum bilkul apne aap ho?"},
+ {en:"What is a mistake that taught you the most?", ur:"Kaun si ghalti ne tumhe sab se zyada sikhaya?"},
+ {en:"What do you want people to remember about you?", ur:"Tum chahte ho log tumhe kis baat se yaad rakhein?"},
+ {en:"What is something you are still learning about yourself?", ur:"Apne baare mein kaun si baat tum abhi bhi seekh rahe ho?"},
+ {en:"What does a perfect day of peace look like to you?", ur:"Tumhare liye sukoon bhara behtareen din kaisa hota hai?"},
+ {en:"What is one thing you wish you could tell your younger self?", ur:"Apne chhote wale aap ko kya kehna chahte ho?"},
+ {en:"When was the last time you felt truly proud of yourself?", ur:"Aakhri dafa kab tumhe apne aap par fakhar mehsoos hua?"},
+ {en:"What do you need most from me when you are sad?", ur:"Jab tum udaas hote ho to mujhse sab se zyada kya chahiye hota hai?"},
+ {en:"What is a dream you gave up on — and do you still want it?", ur:"Kaun sa khwaab tumne chhod diya — aur kya abhi bhi chahte ho?"},
+ {en:"What scares you most about the future?", ur:"Mustaqbil ke baare mein sab se zyada kis baat ka darr hai?"},
+ {en:"What is one belief you have changed your mind about?", ur:"Kaun si baat par tumhari raaye badal gayi hai?"},
+ {en:"How do you want us to handle disagreements?", ur:"Hum apne ikhtilafat ko kis tarah suljhana chahte hain?"},
+ {en:"What is the kindest thing anyone has ever done for you?", ur:"Kisi ne tumhare liye sab se achha kaam kya kiya tha?"},
+ {en:"What part of your life are you most grateful for right now?", ur:"Is waqt apni zindagi ki kis cheez ke liye sab se zyada shukr guzar ho?"},
+ {en:"What does home feel like to you?", ur:"Ghar tumhare liye kaisa mehsoos hota hai?"},
+ {en:"What is something you want to understand better about me?", ur:"Mere baare mein kaun si baat tum behtar samajhna chahte ho?"},
+ {en:"If you could ask me one thing and I had to answer honestly, what would it be?", ur:"Agar tum mujhse ek sawaal pooch sakte aur mujhe sach jawab dena pare, to kya poochte?"}
+],
+fun: [
+ {en:"If I were a food, what food would I be?", ur:"Agar main koi khana hota to kaun sa hota?"},
+ {en:"What is the funniest thing that has ever happened to you?", ur:"Tumhare saath sab se mazahiya waqiya kya hua tha?"},
+ {en:"If we swapped bodies for a day, what is the first thing you would do?", ur:"Agar hum ek din ke liye jism badal lein to sab se pehle kya karoge?"},
+ {en:"What is my most annoying habit — be honest!", ur:"Meri sab se irritating aadat kya hai — sach batao!"},
+ {en:"If we were in a movie, what genre would our story be?", ur:"Agar hum kisi film mein hote to hamari kahani kis genre ki hoti?"},
+ {en:"What is the weirdest food combination you secretly love?", ur:"Kaun sa ajeeb khana tum chhup kar pasand karte ho?"},
+ {en:"If you could have any superpower for a day, what would it be?", ur:"Agar ek din ke liye koi superpower mil jaye to kya loge?"},
+ {en:"What is my best impression — can you describe it in words?", ur:"Meri sab se achhi nakal kaun si hai — lafzon mein batao?"},
+ {en:"If we opened a shop together, what would we sell?", ur:"Agar hum dono ek dukaan kholein to kya bechein?"},
+ {en:"What is the silliest argument we have ever had?", ur:"Hamari sab se silly ladai kis baat par hui thi?"},
+ {en:"If I were an animal, which animal would I be?", ur:"Agar main koi janwar hota to kaun sa hota?"},
+ {en:"What is a song you sing badly but love anyway?", ur:"Kaun sa gaana tum bura gaate ho phir bhi pasand hai?"},
+ {en:"If we could teleport anywhere right now, where would we go?", ur:"Agar hum abhi kahin teleport kar sakein to kahan jayenge?"},
+ {en:"What is the most embarrassing thing I have done in front of you?", ur:"Maine tumhare saamne sab se embarrassing kaam kya kiya tha?"},
+ {en:"If our life had a theme song, what would it be?", ur:"Agar hamari zindagi ka koi theme song hota to kaun sa hota?"},
+ {en:"What is one thing you are secretly really good at?", ur:"Kaun si cheez mein tum chhup kar bohat achhe ho?"},
+ {en:"If you could prank me once with no consequences, what would you do?", ur:"Agar mujhe ek dafa bina kisi nateeje ke prank kar sakte to kya karte?"},
+ {en:"What is the worst joke you know?", ur:"Tumhara sab se bura joke kaun sa hai?"},
+ {en:"If we were cartoon characters, who would we be?", ur:"Agar hum cartoon characters hote to kaun hote?"},
+ {en:"What is my signature dance move?", ur:"Mera signature dance move kya hai?"}
+],
+manifesting: [
+ {en:"Where do you see us in five years?", ur:"Paanch saal baad tum humein kahan dekhte ho?"},
+ {en:"What is one big dream we should chase together?", ur:"Kaun sa bada khwaab humein ek saath poora karna chahiye?"},
+ {en:"Describe our dream home in three sentences.", ur:"Hamara khwabon wala ghar teen jumlon mein bayan karo."},
+ {en:"What is one goal you want to achieve before you turn 30?", ur:"30 saal ke hone se pehle kaun sa maqsad poora karna chahte ho?"},
+ {en:"If money was no object, what would our life look like?", ur:"Agar paise ki koi fikr na hoti to hamari zindagi kaisi hoti?"},
+ {en:"What tradition do you want us to start together?", ur:"Kaun si riwayat hum dono ko shuru karni chahiye?"},
+ {en:"What is one place in the world we must visit together?", ur:"Duniya mein kaun si jagah humein zaroor ek saath dekhni chahiye?"},
+ {en:"What do you want our future mornings to look like?", ur:"Hamari mustaqbil ki subhein kaisi honi chahiye?"},
+ {en:"What is a skill we should learn together?", ur:"Kaun si skill humein ek saath seekhni chahiye?"},
+ {en:"What would you name our future pet?", ur:"Hamare mustaqbil ke pet ka naam kya rakhein?"},
+ {en:"What is one thing you want to build together?", ur:"Kaun si cheez hum dono ko ek saath banani chahiye?"},
+ {en:"How do you imagine our first home together?", ur:"Hamara pehla ghar ek saath kaisa hoga?"},
+ {en:"What is a celebration we should plan for next year?", ur:"Agle saal humein kaun si khushi manani chahiye?"},
+ {en:"What kind of life do you want us to be proud of?", ur:"Kaisi zindagi par humein fakhar hona chahiye?"},
+ {en:"If we could start a small business together, what would it be?", ur:"Agar hum ek chhota sa business ek saath shuru karein to kya hoga?"},
+ {en:"What is one adventure on your bucket list for us?", ur:"Hamare liye bucket list ka ek adventure kaun sa hai?"},
+ {en:"What do you hope we never stop doing together?", ur:"Tum kya chahte ho hum kabhi ek saath karna band na karein?"},
+ {en:"Describe the perfect anniversary for us.", ur:"Hamari behtareen anniversary kaisi hogi?"},
+ {en:"What is one thing you want to teach our future kids about love?", ur:"Apne mustaqbil ke bachon ko pyaar ke baare mein kya sikhana chahte ho?"},
+ {en:"In one sentence, what is the future you are manifesting for us?", ur:"Ek jumle mein, hamara mustaqbil kaisa ho — jo tum manifest kar rahe ho?"}
+],
+delulu: [
+ {en:"What if we were secretly royalty — what would our royal titles be?", ur:"Agar hum chhup kar shahi khandan se hote to hamare titles kya hote?"},
+ {en:"What if we woke up famous tomorrow — famous for what?", ur:"Agar hum kal subah mashhoor ho kar uthein to kis cheez ke liye?"},
+ {en:"What if we could time-travel to any era together — which one?", ur:"Agar hum waqt mein safar kar sakte to kis zamane mein jate?"},
+ {en:"What if we had a private island — what would we name it?", ur:"Agar hamara apna private island hota to uska naam kya rakhte?"},
+ {en:"What if we were in a K-drama — who would be the dramatic one?", ur:"Agar hum K-drama mein hote to dramatic kaun hota?"},
+ {en:"What if we won the lottery tonight — what is the first thing we buy?", ur:"Agar aaj raat lottery jeet jayein to sab se pehle kya khareedein?"},
+ {en:"What if our love story was a Netflix series — what would episode one be called?", ur:"Agar hamari kahani Netflix series hoti to pehli episode ka naam kya hota?"},
+ {en:"What if we could read each other's minds for a day — what would you do first?", ur:"Agar hum ek din ke liye ek doosre ka dimaagh parh sakte to sab se pehle kya karte?"},
+ {en:"What if we were spies on a secret mission — what is our code name?", ur:"Agar hum kisi secret mission par jasoos hote to hamara code name kya hota?"},
+ {en:"What if we lived in a castle — which room would be yours?", ur:"Agar hum kisi qile mein rehte to tumhara kamra kaun sa hota?"},
+ {en:"What if we had a magic door to anywhere — where do we go first?", ur:"Agar hamare paas kahin bhi jaane wala jadooee darwaza hota to sab se pehle kahan jate?"},
+ {en:"What if we were the main characters of a video game — what is our special power?", ur:"Agar hum video game ke main characters hote to hamari special power kya hoti?"},
+ {en:"What if we could have dinner with any celebrity couple — who would it be?", ur:"Agar hum kisi mashhoor couple ke saath dinner kar sakte to kaun hota?"},
+ {en:"What if we were stuck on a desert island with only three things — what do we bring?", ur:"Agar hum ek sunsaan jazeere par sirf teen cheezon ke saath phans jayein to kya le kar jayein?"},
+ {en:"What if we could live in any fictional world — which one?", ur:"Agar hum kisi fictional duniya mein reh sakte to kaun si hoti?"},
+ {en:"What if our pets could talk — what would they say about us?", ur:"Agar hamare pets bol sakte to hamare baare mein kya kehte?"},
+ {en:"What if we had to survive a zombie apocalypse together — who is in charge?", ur:"Agar humein ek saath zombie apocalypse se bachna pare to in charge kaun hota?"},
+ {en:"What if we were billionaires for a week — what is the most delulu thing we do?", ur:"Agar hum ek hafte ke liye billionaire hote to sab se delulu kaam kya karte?"},
+ {en:"What if we met in a past life — who were we?", ur:"Agar hum pichhli zindagi mein mile hote to kaun hote?"},
+ {en:"What if the whole world was watching us right now — what would we do?", ur:"Agar poori duniya abhi humein dekh rahi hoti to hum kya karte?"}
+]
+};
+
+/* ================= Local rephraser (no AI API — template-based) =================
+   Turns a typed question into a game-style format so it never looks
+   human-written: "what if…", "rate 1–10…", "finish the sentence…",
+   "pick one…", "in one word…", "would you rather…". Urdu text gets
+   Urdu templates. The format is picked randomly each time. */
+function isUrduText(t){
+  if (/[\u0600-\u06FF]/.test(t)) return true;
+  var w = (" " + t.toLowerCase() + " ");
+  var hits = [" kya "," tum "," tumhe "," mujhe "," mera "," meri "," kaise "," kab "," kyun "," kya "," hum "," aap "," agar "," to "];
+  var n = 0; hits.forEach(function(h){ if (w.indexOf(h) >= 0) n++; });
+  return n >= 2;
+}
+function stem(q){
+  var s = String(q || "").trim().replace(/\s+/g, " ");
+  s = s.replace(/\?+\s*$/, "");
+  return s;
+}
+function lowerFirst(s){ return s ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+function rephraseQuestion(q){
+  var s = stem(q);
+  if (!s) return "";
+  var ur = isUrduText(s);
+  var low = lowerFirst(s);
+  /* Question-word stems ("What is…?", "Do you…?", "Kya…?") read badly
+     after "What if" / "Would you rather", so those formats only apply
+     to statement-like stems. The other formats work with any stem. */
+  var startsQ = /^(what|why|when|where|who|how|do|does|did|can|could|would|should|is|are|was|were|kya|kab|kaise|kyun|kaun|agar)\b/i.test(s);
+  var formats = [];
+  if (ur) {
+    if (!startsQ) formats.push(function(){ return "Agar " + low + " to kya hota?"; });
+    formats.push(function(){ return "1 se 10 tak rate karo: " + low + "?"; });
+    formats.push(function(){ return "Jumla mukammal karo: \u201C" + s + "…\u201D"; });
+    formats.push(function(){ return "Ek lafz mein: " + low + "?"; });
+    formats.push(function(){ return "Sach batao: " + low + "?"; });
+    formats.push(function(){ return "Bina soche jawab do: " + low + "?"; });
+  } else {
+    if (!startsQ) formats.push(function(){ return "What if " + low + " — what would happen next?"; });
+    if (!startsQ) formats.push(function(){ return "Would you rather " + low + " — or the exact opposite?"; });
+    formats.push(function(){ return "On a scale of 1 to 10, " + low + "?"; });
+    formats.push(function(){ return "Finish this sentence: \u201C" + s + "…\u201D"; });
+    formats.push(function(){ return "In one word, " + low + "?"; });
+    formats.push(function(){ return "Be honest: " + low + "?"; });
+    formats.push(function(){ return "Quick — no thinking: " + low + "?"; });
+  }
+  /* "Pick one" only works when the question offers two options. */
+  var orParts = ur ? s.split(/\s+ya\s+/i) : s.split(/\s+or\s+/i);
+  if (orParts.length === 2) {
+    var a = orParts[0].replace(/\?+$/, "").trim(), b = orParts[1].replace(/\?+$/, "").trim();
+    a = a.replace(/^(do you|would you|do|would|prefer|like|want|choose|kya tum|tum)\s+/i, "");
+    if (ur) formats.push(function(){ return "Ek chuno: " + a + " ya " + b + "?"; });
+    else formats.push(function(){ return "Pick one: " + a + " or " + b + "?"; });
+  }
+  var pick = formats[Math.floor(Math.random() * formats.length)];
+  var out = pick();
+  /* Never return the input unchanged. */
+  if (out.toLowerCase().replace(/\W/g,"") === s.toLowerCase().replace(/\W/g,"")) return (ur ? "Sach batao: " : "Be honest: ") + low + "?";
+  return out;
+}
+
+/* ================= Helpers ================= */
+var API_BASE = "https://apps-backend.abdulrahman-dogar.workers.dev";
+var POLL_MS = 2000, PRESENCE_MS = 60000, ROOM_TTL_MS = 24 * 60 * 60 * 1000;
+var AVATARS = ["🦁","🦋","🌙","⭐","🌸","🐼","🦊","🌊","🔥","🍓","🎵","💎"];
+var COLORS = ["#fb7185","#818cf8","#f59e0b","#10b981","#c084fc","#0ea5e9"];
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function uid(){ return "u_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+function roomCode(){
+  var letters = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  var c = "";
+  for (var i = 0; i < 6; i++) c += letters[Math.floor(Math.random() * letters.length)];
+  return c;
+}
+var toastTimer = null;
+function toast(msg){
+  var t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2600);
+}
+
+/* ================= Local session ================= */
+var me = { id: uid(), name: "", avatar: AVATARS[0], color: COLORS[0] };
+var selectedMode = "lovely";
+var lang = "en";
+try {
+  var saved = JSON.parse(localStorage.getItem("between-us-me") || "null");
+  if (saved && saved.name) { me.name = saved.name; me.avatar = saved.avatar || me.avatar; me.color = saved.color || me.color; me.id = saved.id || me.id; }
+  var lastCode = localStorage.getItem("between-us-last-code") || "";
+} catch (e) { var lastCode = ""; }
+function saveMe(){
+  try {
+    localStorage.setItem("between-us-me", JSON.stringify({ id: me.id, name: me.name, avatar: me.avatar, color: me.color }));
+    if (myCode) localStorage.setItem("between-us-last-code", myCode);
+  } catch (e) {}
+}
+
+/* ================= Room state + sync ================= */
+var myCode = "", isHost = false, roomState = null;
+var pollTimer = null, hbTimer = null, typingTimer = null, typingSentAt = 0;
+var renderedChat = 0, lastQId = null;
+
+function kvKey(code){ return "bu:" + code; }
+function kvGet(code){
+  return fetch(API_BASE + "/v1/kv/" + encodeURIComponent(kvKey(code)), { cache: "no-store" })
+    .then(function (r){ if (r.status === 404) return null; if (!r.ok) throw new Error("kv " + r.status); return r.json(); })
+    .then(function (j){ return j ? j.value : null; })
+    .catch(function (){ return null; });
+}
+function kvPut(code, state){
+  return fetch(API_BASE + "/v1/kv/" + encodeURIComponent(kvKey(code)), {
+    method: "PUT", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ value: state })
+  }).catch(function (){});
+}
+function kvDel(code){
+  return fetch(API_BASE + "/v1/kv/" + encodeURIComponent(kvKey(code)), { method: "DELETE" }).catch(function (){});
+}
+/* One write queue, in order — same pattern as Watch Party. */
+var writeQueue = Promise.resolve();
+function queueWrite(fn){ var p = writeQueue.then(fn, fn); writeQueue = p.catch(function (){}); return p; }
+function chatKey(m){ return (m.ts || 0) + "|" + (m.n || "") + "|" + (m.t || ""); }
+function mergeChat(a, b){
+  var out = (a || []).concat(b || []), seen = {}, res = [];
+  out.forEach(function (m){ var k = chatKey(m); if (!seen[k]) { seen[k] = 1; res.push(m); } });
+  res.sort(function (x, y){ return (x.ts || 0) - (y.ts || 0); });
+  return res.slice(-100);
+}
+function freshState(code, mode){
+  return {
+    v: 1, code: code, mode: mode, createdAt: Date.now(), updatedAt: Date.now(),
+    hostId: me.id, members: {}, asked: [], nextQ: null,
+    q: null, chat: []
+  };
+}
+function presentMembers(s){
+  var now = Date.now(), out = [];
+  Object.keys(s.members || {}).forEach(function (id){
+    var m = s.members[id];
+    if (m && (now - (m.lastSeen || 0) < 90000)) out.push(id);
+  });
+  return out;
+}
+function pushState(mut){
+  return queueWrite(function (){
+    return kvGet(myCode).then(function (latest){
+      var s = latest || roomState || freshState(myCode, selectedMode);
+      s.updatedAt = Date.now();
+      if (s.members && s.members[me.id]) s.members[me.id].lastSeen = Date.now();
+      mut(s);
+      roomState = s;
+      return kvPut(myCode, s);
+    });
+  });
+}
+function applyRemote(s){
+  if (!s) return;
+  var wasQ = lastQId;
+  roomState = s;
+  if (s.q && s.q.id !== wasQ) { lastQId = s.q.id; }
+  renderRoom();
+}
+function poll(){
+  if (!myCode || document.hidden) return;
+  kvGet(myCode).then(function (s){
+    if (s) applyRemote(s);
+  });
+}
+function startSync(){
+  stopSync();
+  pollTimer = setInterval(poll, POLL_MS);
+  hbTimer = setInterval(function (){
+    if (!document.hidden && myCode) pushState(function (){});
+  }, PRESENCE_MS);
+  document.addEventListener("visibilitychange", onVis);
+  poll();
+}
+function stopSync(){
+  if (pollTimer) clearInterval(pollTimer);
+  if (hbTimer) clearInterval(hbTimer);
+  pollTimer = hbTimer = null;
+  document.removeEventListener("visibilitychange", onVis);
+}
+function onVis(){
+  if (!document.hidden && myCode) poll(); /* resume instantly when tab returns */
+}
+
+/* ================= Rendering ================= */
+function modeOf(id){ for (var i = 0; i < MODES.length; i++) if (MODES[i].id === id) return MODES[i]; return MODES[0]; }
+function qText(q){
+  if (!q) return "";
+  if (q.en && q.ur) return lang === "ur" ? q.ur : q.en;
+  return q.text || "";
+}
+function isRevealed(s){
+  var q = s.q;
+  if (!q || !q.answers) return false;
+  var present = presentMembers(s);
+  if (present.length === 0) return false;
+  if (present.length === 1) return !!q.answers[present[0]];
+  return present.every(function (id){ return !!q.answers[id]; });
+}
+function renderRoom(){
+  var s = roomState;
+  if (!s) return;
+  var m = modeOf(s.mode);
+  $("modePill").textContent = m.em + " " + (lang === "ur" ? m.ur : m.en);
+  $("modePill").style.background = "#fff";
+  $("modeSwitch").value = s.mode;
+  $("modeSwitch").disabled = !isHost;
+  $("modeSwitch").title = isHost ? "Host can switch the mood between questions" : "Only the host can switch the mood";
+  $("codePill").textContent = "💌 " + s.code;
+
+  /* Profiles + per-person state */
+  var prof = $("profiles");
+  prof.innerHTML = "";
+  var ids = Object.keys(s.members || {});
+  var now = Date.now();
+  ids.forEach(function (id){
+    var p = s.members[id];
+    var online = (now - (p.lastSeen || 0) < 90000);
+    var st = "";
+    if (s.q) {
+      if (s.q.answers && s.q.answers[id]) st = "submitted ✓";
+      else if (s.q.typing && s.q.typing[id] && (now - s.q.typing[id] < 6000)) st = "typing…";
+      else st = "hasn't answered yet";
+    } else {
+      st = online ? "online" : "away";
+    }
+    var div = document.createElement("div");
+    div.className = "profile";
+    div.style.borderTop = "4px solid " + (p.color || "#fb7185");
+    div.innerHTML = '<div class="av">' + esc(p.avatar || "💗") + '</div>' +
+      '<div class="nm">' + esc(p.name || "…") + (id === me.id ? " (you)" : "") + '</div>' +
+      '<div class="st"><span class="dot' + (online ? " on" : "") + '"></span>' + esc(st) + '</div>';
+    prof.appendChild(div);
+  });
+  while (ids.length < 2) {
+    var empty = document.createElement("div");
+    empty.className = "profile";
+    empty.innerHTML = '<div class="av">💌</div><div class="nm">Waiting…</div><div class="st">share the code</div>';
+    prof.appendChild(empty);
+    ids.push(null);
+  }
+  var present = presentMembers(s);
+  $("waitNote").textContent = present.length < 2
+    ? "Waiting for your partner to join — share the code " + s.code + " 💌"
+    : "";
+
+  /* Question card */
+  var q = s.q;
+  var revealed = isRevealed(s);
+  if (!q) {
+    $("qModeLabel").textContent = m.em + " " + (lang === "ur" ? m.ur : m.en);
+    $("qText").textContent = "Tap “Next question” to begin…";
+    $("qFrom").textContent = "";
+    $("answerArea").classList.add("hidden");
+    $("myAnswerDone").classList.add("hidden");
+    $("revealArea").classList.add("hidden");
+    $("nextBtn").disabled = false;
+  } else {
+    $("qModeLabel").textContent = modeOf(q.mode || s.mode).em + " " + (lang === "ur" ? modeOf(q.mode || s.mode).ur : modeOf(q.mode || s.mode).en);
+    $("qText").textContent = qText(q);
+    $("qFrom").textContent = q.from === "custom"
+      ? "✨ Added by " + esc((s.members[q.addedBy] || {}).name || "someone") + " · rephrased by the game"
+      : "From the " + (lang === "ur" ? modeOf(q.mode || s.mode).ur : modeOf(q.mode || s.mode).en) + " deck";
+    var mine = q.answers && q.answers[me.id];
+    if (revealed) {
+      $("answerArea").classList.add("hidden");
+      $("myAnswerDone").classList.add("hidden");
+      $("revealArea").classList.remove("hidden");
+      var grid = $("revealGrid");
+      grid.innerHTML = "";
+      Object.keys(q.answers || {}).forEach(function (id){
+        var p = s.members[id] || { name: "…", avatar: "💗" };
+        var d = document.createElement("div");
+        d.className = "who";
+        d.innerHTML = '<div class="who-nm">' + esc(p.avatar || "") + " " + esc(p.name || "…") + '</div><div class="who-tx">' + esc(q.answers[id].text) + '</div>';
+        grid.appendChild(d);
+      });
+    } else if (mine) {
+      $("answerArea").classList.add("hidden");
+      $("revealArea").classList.add("hidden");
+      $("myAnswerDone").classList.remove("hidden");
+      $("myAnswerText").textContent = "“" + mine.text + "”";
+    } else {
+      $("myAnswerDone").classList.add("hidden");
+      $("revealArea").classList.add("hidden");
+      $("answerArea").classList.remove("hidden");
+      $("submitAnswerBtn").disabled = present.length < 2 && false; /* single player may still answer */
+    }
+    $("nextBtn").disabled = !revealed && !!q;
+  }
+  /* Up-next note */
+  if (s.nextQ) {
+    $("upNext").classList.remove("hidden");
+    $("upNext").textContent = "Up next (added by " + esc((s.members[s.nextQ.addedBy] || {}).name || "someone") + "): “" + s.nextQ.text + "”";
+  } else {
+    $("upNext").classList.add("hidden");
+  }
+
+  /* Chat */
+  var log = $("chatLog");
+  var chat = s.chat || [];
+  if (chat.length !== renderedChat) {
+    log.innerHTML = "";
+    chat.forEach(function (c){
+      var d = document.createElement("div");
+      if (c.sys) { d.className = "msg sys"; d.textContent = c.t; }
+      else {
+        d.className = "msg " + (c.id === me.id ? "me" : "them");
+        d.innerHTML = '<span class="who">' + esc(c.n || "") + '</span>' + esc(c.t || "");
+      }
+      log.appendChild(d);
+    });
+    renderedChat = chat.length;
+    log.scrollTop = log.scrollHeight;
+  }
+}
+
+/* ================= Actions ================= */
+function enterRoom(code, host){
+  myCode = code; isHost = host; renderedChat = 0; lastQId = null;
+  $("landing").classList.add("hidden");
+  $("room").classList.remove("hidden");
+  saveMe();
+  startSync();
+  window.scrollTo(0, 0);
+}
+function joinMember(s, silent){
+  var isNew = !s.members[me.id];
+  s.members[me.id] = { name: me.name, avatar: me.avatar, color: me.color, lastSeen: Date.now(), joinedAt: Date.now() };
+  if (isNew && !silent) {
+    s.chat = (s.chat || []).concat([{ ts: Date.now(), sys: true, t: "🎉 " + me.name + " joined the room" }]).slice(-100);
+  }
+  return isNew;
+}
+function createRoom(){
+  if (!me.name) { toast("Please enter your name first 💗"); $("nameInput").focus(); return; }
+  var code = roomCode();
+  var state = freshState(code, selectedMode);
+  joinMember(state, true);
+  state.chat = [{ ts: Date.now(), sys: true, t: "💌 Room created · mood: " + modeOf(selectedMode).en }];
+  kvPut(code, state).then(function (){
+    roomState = state;
+    enterRoom(code, true);
+    renderRoom();
+    toast("Room created! Code: " + code);
+  });
+}
+function joinRoom(code){
+  code = (code || "").toUpperCase().replace(/[^A-Z]/g, "");
+  if (code.length !== 6) { toast("Enter the 6-letter room code"); return; }
+  if (!me.name) { toast("Please enter your name first 💗"); $("nameInput").focus(); return; }
+  kvGet(code).then(function (s){
+    if (!s) { toast("Room not found — check the code 💌"); return; }
+    if (Date.now() - (s.updatedAt || 0) > ROOM_TTL_MS) { toast("That room expired (24h of quiet) — create a fresh one 💌"); return; }
+    pushStateTo(code, s);
+  });
+  function pushStateTo(code, s){
+    myCode = code;
+    queueWrite(function (){
+      return kvGet(code).then(function (latest){
+        var st = latest || s;
+        joinMember(st, false);
+        st.updatedAt = Date.now();
+        roomState = st;
+        return kvPut(code, st);
+      });
+    }).then(function (){
+      enterRoom(code, roomState.hostId === me.id);
+      renderRoom();
+    });
+  }
+}
+function pickBankQuestion(s){
+  var bank = BANK[s.mode] || BANK.lovely;
+  var asked = s.asked || [];
+  var remaining = [];
+  bank.forEach(function (q, i){ if (asked.indexOf(s.mode + "-" + i) < 0) remaining.push(i); });
+  if (remaining.length === 0) {
+    /* Bank exhausted — reshuffle from scratch. */
+    s.asked = (s.asked || []).filter(function (id){ return id.indexOf(s.mode + "-") !== 0; });
+    remaining = bank.map(function (q, i){ return i; });
+  }
+  var idx = remaining[Math.floor(Math.random() * remaining.length)];
+  var q = bank[idx];
+  return { id: s.mode + "-" + idx, mode: s.mode, from: "bank", addedBy: null, en: q.en, ur: q.ur, answers: {}, typing: {}, askedAt: Date.now() };
+}
+function nextQuestion(){
+  if (!roomState) return;
+  var s = roomState;
+  if (s.q && !isRevealed(s)) { toast("Finish this question first — both answers reveal together 💗"); return; }
+  pushState(function (st){
+    var q;
+    if (st.nextQ) { q = st.nextQ; st.nextQ = null; }
+    else q = pickBankQuestion(st);
+    q.answers = {}; q.typing = {};
+    st.q = q;
+    st.asked = (st.asked || []).concat([q.id]);
+    lastQId = q.id;
+  }).then(function (){ poll(); });
+}
+function submitAnswer(){
+  var text = $("answerInput").value.trim();
+  if (!text) { toast("Type your answer first 💭"); return; }
+  if (text.length > 280) text = text.slice(0, 280);
+  pushState(function (st){
+    if (!st.q) return;
+    st.q.answers = st.q.answers || {};
+    st.q.answers[me.id] = { text: text, ts: Date.now() };
+    if (st.q.typing) delete st.q.typing[me.id];
+  }).then(function (){
+    $("answerInput").value = "";
+    poll();
+  });
+}
+function sendChat(){
+  var text = $("chatInput").value.trim();
+  if (!text) return;
+  pushState(function (st){
+    st.chat = mergeChat(st.chat, [{ ts: Date.now(), n: me.name, t: text.slice(0, 300), id: me.id }]);
+  }).then(function (){
+    $("chatInput").value = "";
+    poll();
+  });
+}
+function addCustomQuestion(){
+  var raw = $("customQInput").value.trim();
+  if (!raw) { toast("Type a question first ✨"); return; }
+  var rephrased = rephraseQuestion(raw);
+  pushState(function (st){
+    st.nextQ = { id: "custom-" + Date.now(), mode: st.mode, from: "custom", addedBy: me.id, text: rephrased, answers: {}, typing: {}, askedAt: Date.now() };
+  }).then(function (){
+    $("customQInput").value = "";
+    $("addQArea").classList.add("hidden");
+    toast("Added! It will be the next question ✨");
+    poll();
+  });
+}
+function markTyping(){
+  var now = Date.now();
+  if (now - typingSentAt < 4000) return;
+  typingSentAt = now;
+  pushState(function (st){
+    if (!st.q) return;
+    st.q.typing = st.q.typing || {};
+    st.q.typing[me.id] = Date.now();
+  });
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(function (){
+    pushState(function (st){ if (st.q && st.q.typing) delete st.q.typing[me.id]; });
+  }, 5000);
+}
+
+/* ================= Landing setup ================= */
+function buildLanding(){
+  var ar = $("avatarRow");
+  AVATARS.forEach(function (a){
+    var b = document.createElement("button");
+    b.className = "chip" + (a === me.avatar ? " sel" : "");
+    b.textContent = a; b.type = "button";
+    b.onclick = function(){ me.avatar = a; saveMe(); buildLanding(); };
+    ar.appendChild(b);
+  });
+  var cr = $("colorRow");
+  COLORS.forEach(function (c){
+    var b = document.createElement("button");
+    b.className = "swatch" + (c === me.color ? " sel" : "");
+    b.style.background = c; b.type = "button";
+    b.onclick = function(){ me.color = c; saveMe(); buildLanding(); };
+    cr.appendChild(b);
+  });
+  var mg = $("modeGrid");
+  mg.innerHTML = "";
+  MODES.forEach(function (m){
+    var b = document.createElement("button");
+    b.className = "mode" + (m.id === selectedMode ? " sel" : "");
+    b.type = "button";
+    b.innerHTML = '<span class="em">' + m.em + '</span><span class="nm">' + m.en + '</span><span class="ds">' + m.ds + '</span>';
+    b.onclick = function(){ selectedMode = m.id; buildLanding(); };
+    mg.appendChild(b);
+  });
+  $("nameInput").value = me.name || "";
+  var ms = $("modeSwitch");
+  ms.innerHTML = "";
+  MODES.forEach(function (m){
+    var o = document.createElement("option");
+    o.value = m.id; o.textContent = m.em + " " + m.en;
+    ms.appendChild(o);
+  });
+  if (lastCode) { $("rejoinBtn").classList.remove("hidden"); $("rejoinBtn").textContent = "↩ Rejoin last room (" + lastCode + ")"; }
+}
+function setLang(l){
+  lang = l;
+  $("langEn").classList.toggle("sel", l === "en");
+  $("langUr").classList.toggle("sel", l === "ur");
+  renderRoom();
+}
+
+/* ================= Wire up ================= */
+$("nameInput").addEventListener("input", function(){ me.name = $("nameInput").value.trim(); saveMe(); });
+$("createBtn").addEventListener("click", createRoom);
+$("joinBtn").addEventListener("click", function(){ joinRoom($("codeInput").value); });
+$("codeInput").addEventListener("keydown", function(e){ if (e.key === "Enter") joinRoom($("codeInput").value); });
+$("rejoinBtn").addEventListener("click", function(){ if (lastCode) joinRoom(lastCode); });
+$("nextBtn").addEventListener("click", nextQuestion);
+$("submitAnswerBtn").addEventListener("click", submitAnswer);
+$("answerInput").addEventListener("input", markTyping);
+$("answerInput").addEventListener("keydown", function(e){ if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) submitAnswer(); });
+$("chatSendBtn").addEventListener("click", sendChat);
+$("chatInput").addEventListener("keydown", function(e){ if (e.key === "Enter") sendChat(); });
+$("addQBtn").addEventListener("click", function(){ $("addQArea").classList.toggle("hidden"); $("customQInput").focus(); });
+$("sendCustomQBtn").addEventListener("click", addCustomQuestion);
+$("modeSwitch").addEventListener("change", function(){
+  var v = $("modeSwitch").value;
+  if (!isHost) { toast("Only the host can switch the mood 💗"); renderRoom(); return; }
+  if (roomState && roomState.q && !isRevealed(roomState)) { toast("Switch moods between questions 💗"); renderRoom(); return; }
+  pushState(function (st){ st.mode = v; }).then(function (){ poll(); });
+});
+$("langEn").addEventListener("click", function(){ setLang("en"); });
+$("langUr").addEventListener("click", function(){ setLang("ur"); });
+$("codePill").addEventListener("click", function(){
+  var code = roomState ? roomState.code : "";
+  if (!code) return;
+  var done = function(){ toast("Code copied: " + code + " 💌"); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, done);
+  else done();
+});
+$("leaveBtn").addEventListener("click", function(){
+  stopSync();
+  myCode = ""; roomState = null;
+  $("room").classList.add("hidden");
+  $("landing").classList.remove("hidden");
+  buildLanding();
+});
+$("deleteBtn").addEventListener("click", function(){
+  if (!isHost) { toast("Only the host can delete the room"); return; }
+  if (!confirm("Delete this room for both of you?")) return;
+  var code = myCode;
+  stopSync();
+  kvDel(code).then(function (){
+    myCode = ""; roomState = null;
+    $("room").classList.add("hidden");
+    $("landing").classList.remove("hidden");
+    try { localStorage.removeItem("between-us-last-code"); } catch (e) {}
+    buildLanding();
+    toast("Room deleted 💌");
+  });
+});
+buildLanding();
+</script>
+</body>
+</html>
