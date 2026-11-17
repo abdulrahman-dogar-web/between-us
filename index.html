@@ -479,7 +479,7 @@ function kvPut(code, state){
   return fetch(API_BASE + "/v1/kv/" + encodeURIComponent(kvKey(code)), {
     method: "PUT", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ value: state })
-  }).catch(function (){});
+  }).then(function (r){ if (!r.ok) throw new Error("kv " + r.status); });
 }
 function kvDel(code){
   return fetch(API_BASE + "/v1/kv/" + encodeURIComponent(kvKey(code)), { method: "DELETE" }).catch(function (){});
@@ -714,6 +714,8 @@ function createRoom(){
     enterRoom(code, true);
     renderRoom();
     toast("Room created! Code: " + code);
+  }).catch(function (){
+    toast("Room save nahi hua — server ne mana kar diya. Thodi der baad dobara try karein 💌");
   });
 }
 function joinRoom(code){
@@ -738,6 +740,8 @@ function joinRoom(code){
     }).then(function (){
       enterRoom(code, roomState.hostId === me.id);
       renderRoom();
+    }).catch(function (){
+      toast("Join save nahi hua — server ne mana kar diya. Dobara try karein 💌");
     });
   }
 }
